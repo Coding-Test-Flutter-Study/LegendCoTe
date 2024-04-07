@@ -1,0 +1,47 @@
+import java.io.*;
+import java.util.StringTokenizer;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+
+    static int k;
+    static int[] array;
+    static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+        while (true) {
+
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            k = Integer.parseInt(st.nextToken());
+            if (k == 0) {
+                break;
+
+            } else {
+                array = new int[k];
+                for (int i = 0; i < k; i++) {
+                    array[i] = Integer.parseInt(st.nextToken());
+                }
+
+                String num = "";
+                dfs(0, num, 0);
+
+                bw.write("\n");
+            }
+        }
+        bw.flush();
+    }
+
+    static void dfs(int count, String num, int order) throws IOException {
+
+        if (count == 6) {
+            bw.write(num);
+            bw.write("\n");
+        }
+        for (int i = order; i < k; i++) {
+            dfs(count + 1, num + array[i] + " ", i + 1);
+        }
+    }
+}
