@@ -31,7 +31,7 @@ class Solution {
                 }}
             }
             //소수 조건
-            if(ok&&Integer.parseInt(num)!=1&&Integer.parseInt(num)!=0){
+            if(ok&&Integer.parseInt(num)!=1&&Integer.parseInt(num)!=0||ok&&Integer.parseInt(num)==2){
             hashSet.add(Integer.parseInt(num));
              }
 
