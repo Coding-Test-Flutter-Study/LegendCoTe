@@ -1,0 +1,35 @@
+class Solution {
+    public int[] solution(int brown, int yellow) {
+        int[] answer = {};
+        int x = 0;
+        int X = -1;
+        int y = 0;
+
+        if(yellow%2!=0){
+            while(true){
+            X+=2;
+            y=yellow/X;
+
+            if(yellow+brown==(X+2)*(y+2)&&yellow%X==0){
+                answer = new int[]{Math.max(y+2,X+2),Math.min(y+2,X+2)};
+                break;
+            }
+            }
+
+        } else{
+
+           while(true){
+            x+=2;
+            y=yellow/x;
+
+            if(yellow+brown==(x+2)*(y+2)&&yellow%x==0){
+                answer = new int[]{Math.max(y+2,x+2),Math.min(y+2,x+2)};
+                break;
+            }
+
+        }
+        }
+
+        return answer;
+    }
+}
