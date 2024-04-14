@@ -1,0 +1,46 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+
+
+    static long[] array;
+
+    static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+        int N = Integer.parseInt(br.readLine());
+        array= new long[N+1];
+        if(N==1){
+            bw.write("1");
+        } else if (N==2) {
+            bw.write("3");
+        } else {
+
+            bw.write(String.valueOf(DP(N)));
+        }
+
+        bw.flush();
+    }
+
+
+    static long DP(int n){
+
+        array[1] =1;
+        array[2]= 3;
+
+        for(int i=3;i<=n;i++){
+            array[i] = (2*array[i-2]+array[i-1])%10007;
+        }
+
+       return array[n];
+    }
+
+
+}

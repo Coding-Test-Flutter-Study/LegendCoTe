@@ -1,0 +1,105 @@
+import java.io.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+
+
+    static int N,M;
+
+    static int [][] map;
+    static boolean[][] visited;
+
+    static int days=0;
+
+    static int[] dx = {0,0,1,-1};
+    static int[] dy = {1,-1,0,0};
+
+    static    Queue<int[]> queue = new LinkedList<>();
+
+
+
+    static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+
+        map= new int[N][M];
+        visited = new boolean[N][M];
+
+        for(int i=0; i<N;i++){
+            StringTokenizer st2 = new StringTokenizer(br.readLine());
+            for(int j=0; j<M;j++){
+                int a = Integer.parseInt(st2.nextToken());
+                map[i][j]=a;
+            }
+        }
+
+
+        for(int i=0; i<N;i++){
+            for(int j=0; j<M;j++){
+                if (map[i][j]==1){
+                    queue.offer(new int[]{i,j});
+                    visited[i][j]=true;
+                }
+            }
+        }
+
+//bfs 함수를 따로 static 으로 빼지 않음
+//시작점이 여러개이므로 queue에 넣어서 한번에 처리하기 위하여
+        while (!queue.isEmpty()){
+
+            int[] poll = queue.poll();
+
+
+            for(int i=0; i<4;i++){
+
+                int newX = poll[0]+dx[i];
+                int newY = poll[1]+dy[i];
+
+                if(newX>=0&&newY>=0&&newX<N&&newY<M&&!visited[newX][newY]&&map[newX][newY]==0){
+                    queue.offer(new int[]{newX,newY});
+                    visited[newX][newY]=true;
+                    map[newX][newY]=map[poll[0]][poll[1]]+1;
+
+                }
+            }
+
+        }
+
+        boolean ok = true;
+        for(int i=0; i<N;i++){
+            for(int j=0; j<M;j++){
+                if(map[i][j]==0){
+                    ok= false;
+                    break;
+                } else if (map[i][j]>=days){
+                    days=map[i][j];
+                }
+
+            }
+        }
+
+
+        if(ok){
+            bw.write(String.valueOf(days-1));
+
+        } else {
+            bw.write("-1");
+        }
+
+
+        bw.flush();
+    }
+
+
+}
