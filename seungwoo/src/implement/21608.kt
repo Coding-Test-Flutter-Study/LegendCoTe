@@ -1,81 +1,125 @@
 package implement
 
-import java.util.PriorityQueue
+import java.util.LinkedList
+import java.util.Queue
 import java.util.StringTokenizer
+import kotlin.math.max
 
 class `21608` {
     private data class Node(val x: Int, val y: Int)
-    private data class Seat(val pos: Node, val adjLikeCnt: Int, val adjEmptyCnt: Int)
-    private data class Student(val num: Int, val likeNums: List<Int>)
 
-    private var seats: Array<Array<Student?>> = arrayOf()
+    private var map: Array<IntArray> = arrayOf()
+    private val multipleOfTwo = intArrayOf(1, 2, 4, 8, 16, 32, 64)
     private val d = listOf(Node(1, 0), Node(-1, 0), Node(0, 1), Node(0, -1))
-    private val seatQ = PriorityQueue<Seat>() { o1, o2 ->
-        if (o1.adjLikeCnt != o2.adjLikeCnt) o2.adjLikeCnt - o1.adjLikeCnt
-        else if (o1.adjEmptyCnt != o2.adjEmptyCnt) o2.adjEmptyCnt - o1.adjEmptyCnt
-        else if (o1.pos.x != o2.pos.x) o1.pos.x - o2.pos.x
-        else o1.pos.y - o2.pos.y
-    }
-    private val satisfyScore = intArrayOf(0, 1, 10, 100, 1000)
+    private var sum = 0
 
-    private fun findSeat(student: Student) {
-        seatQ.clear()
-        for (x in seats.indices) {
-            for (y in seats.indices) {
-                if (seats[x][y] == null) {
-                    seatQ.add(checkAdjSeat(x, y, student))
+    private fun rotateMap(level: Int) {
+        if (level == 0) return
+        val size = multipleOfTwo[level]
+        for (startX in map.indices step size) {
+            for (startY in map.indices step size) {
+                rotatePartMap(startX, startY, size)
+            }
+        }
+    }
+
+    private fun rotatePartMap(startX: Int, startY: Int, size: Int) {
+        val partMap = Array(size) { IntArray(size) }
+        for (x in partMap.indices) {
+            for (y in partMap.indices) {
+                partMap[x][y] = map[x + startX][y + startY]
+            }
+        }
+        val rotatedPartMap = Array(size) { x ->
+            IntArray(size) { y ->
+                partMap[partMap.size - y - 1][x]
+            }
+        }
+        for (x in rotatedPartMap.indices) {
+            for (y in rotatedPartMap.indices) {
+                map[x + startX][y + startY] = rotatedPartMap[x][y]
+            }
+        }
+    }
+
+    private fun decreaseIce() {
+        val newMap = Array(map.size) { IntArray(map.size) }
+        for (x in map.indices) {
+            for (y in map.indices) {
+                val iceAmount = map[x][y]
+                if (iceAmount == 0) continue
+                if (countAdjIce(x, y) >= 3) {
+                    newMap[x][y] = iceAmount
+                } else {
+                    newMap[x][y] = iceAmount - 1
                 }
             }
         }
-        val (x, y) = seatQ.poll().pos
-        seats[x][y] = student
+        map = newMap
     }
 
-    private fun checkAdjSeat(x: Int, y: Int, student: Student): Seat {
-        var likeCnt = 0
-        var emptyCnt = 0
+    private fun countAdjIce(x: Int, y: Int): Int {
+        var cnt = 0
         for (i in d.indices) {
             val nx = x + d[i].x
             val ny = y + d[i].y
-            if (nx !in seats.indices || ny !in seats.indices) continue
-            if (seats[nx][ny] == null) emptyCnt++
-            else if(student.likeNums.contains(seats[nx][ny]!!.num)) likeCnt++
+            if (nx !in map.indices || ny !in map.indices) continue
+            if (map[nx][ny] > 0) cnt++
         }
-        return Seat(Node(x, y), likeCnt, emptyCnt)
+        return cnt
     }
 
-    private fun calcSatisfySum(): Int {
-        var sum = 0
-        for (x in seats.indices) {
-            for (y in seats.indices) {
-                sum += calcSatisfy(x, y)
+    private fun findBiggestIce(): Int {
+        var maxSize = 0
+        val visited = Array(map.size) { BooleanArray(map.size) }
+        for (x in map.indices) {
+            for (y in map.indices) {
+                if (visited[x][y] || map[x][y] == 0) continue
+                val size = bfs(x, y, visited)
+                maxSize = max(maxSize, size)
             }
         }
-        return sum
+        return maxSize
     }
 
-    private fun calcSatisfy(x: Int, y: Int): Int {
-        val student = seats[x][y]!!
-        var likeCnt = 0
-        for (i in d.indices) {
-            val nx = x + d[i].x
-            val ny = y + d[i].y
-            if (nx !in seats.indices || ny !in seats.indices) continue
-            if (student.likeNums.contains(seats[nx][ny]!!.num)) likeCnt++
+    private fun bfs(startX: Int, startY: Int, visited: Array<BooleanArray>): Int {
+        val q = LinkedList<Node>() as Queue<Node>
+        q.offer(Node(startX, startY))
+        visited[startX][startY] = true
+
+        var size = 0
+        while (q.isNotEmpty()) {
+            val (x, y) = q.poll()
+            size++
+            sum += map[x][y]
+            for (i in d.indices) {
+                val nx = x + d[i].x
+                val ny = y + d[i].y
+                if (nx !in map.indices || ny !in map.indices || visited[nx][ny]) continue
+                if (map[nx][ny] > 0) {
+                    q.offer(Node(nx, ny))
+                    visited[nx][ny] = true
+                }
+            }
         }
-        return satisfyScore[likeCnt]
+        return size
     }
 
     fun solution() = with(System.`in`.bufferedReader()) {
-        val n = readLine().toInt()
-        seats = Array(n) { Array(n) { null } }
-        repeat(n * n) {
-            val st = StringTokenizer(readLine())
-            val num = st.nextToken().toInt()
-            val likeNums = List(4) { st.nextToken().toInt() }
-            findSeat(Student(num, likeNums))
+        val (n, q) = readLine().split(" ").map { it.toInt() }
+        var st: StringTokenizer
+        map = Array(multipleOfTwo[n]) {
+            st = StringTokenizer(readLine())
+            IntArray(multipleOfTwo[n]) { st.nextToken().toInt() }
         }
-        println(calcSatisfySum())
+        st = StringTokenizer(readLine())
+        repeat(q) {
+            val level = st.nextToken().toInt()
+            rotateMap(level)
+            decreaseIce()
+        }
+        val biggestIce = findBiggestIce()
+        println("$sum\n$biggestIce")
     }
 }
 
