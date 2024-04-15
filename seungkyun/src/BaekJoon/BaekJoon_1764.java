@@ -1,5 +1,4 @@
 package BaekJoon;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +36,9 @@ public class BaekJoon_1764 {
 
         Collections.sort(arrayList);
         bw.write(String.valueOf(count));
-        for (int i = 0; i < arrayList.size(); i++) {
+        for (String s : arrayList) {
             bw.write("\n");
-            bw.write(arrayList.get(i));
+            bw.write(s);
         }
         bw.flush();
     }
