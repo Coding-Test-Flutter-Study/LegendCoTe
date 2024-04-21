@@ -1,0 +1,79 @@
+import java.io.*;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+
+
+    static int pointer = 0;
+    static int count = 0;
+    static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+        String str = br.readLine();
+
+        while (true) {
+            if (str.charAt(pointer) == 'c') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == '=') {
+                        pointer += 1;
+                        continue;
+                    } else if (str.charAt(pointer + 1) == '-') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+            } else if (str.charAt(pointer) == 'd') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == '-') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+                if (pointer + 2 < str.length()) {
+                    if (str.charAt(pointer + 1) == 'z' && str.charAt(pointer + 2) == '=') {
+                        pointer += 2;
+                        continue;
+                    }
+                }
+            } else if (str.charAt(pointer) == 'l') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == 'j') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+            } else if (str.charAt(pointer) == 'n') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == 'j') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+            } else if (str.charAt(pointer) == 's') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == '=') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+            } else if (str.charAt(pointer) == 'z') {
+                if (pointer + 1 < str.length()) {
+                    if (str.charAt(pointer + 1) == '=') {
+                        pointer += 1;
+                        continue;
+                    }
+                }
+            }
+            pointer++;
+            count++;
+            if (pointer >= str.length()) {
+                break;
+            }
+        }
+        bw.write(String.valueOf(count));
+        bw.flush();
+    }
+}

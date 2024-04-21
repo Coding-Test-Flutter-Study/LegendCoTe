@@ -1,0 +1,46 @@
+import java.io.*;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+
+    static long[][] array;
+
+    static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws IOException {
+
+        int T = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < T; i++) {
+            int k = Integer.parseInt(br.readLine());
+            int n = Integer.parseInt(br.readLine());
+
+            DP(k, n);
+
+            bw.write(DP(k, n) + "\n");
+        }
+
+        bw.flush();
+    }
+
+    static long DP(int k, int n) {
+
+        array = new long[k + 1][n];
+        //초깃값
+        for (int i = 0; i < n; i++) {
+            array[0][i] = i + 1;
+        }
+
+        for (int j = 1; j <= k; j++) {
+            for (int i = 0; i < n; i++) {
+                for (int x = 0; x <= i; x++) {
+                    array[j][i] += array[j - 1][x];
+                }
+            }
+        }
+        return array[k][n - 1];
+    }
+
+}
