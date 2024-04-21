@@ -1,0 +1,31 @@
+class Solution {
+
+    static int times;
+
+    public int solution(int[] numbers, int target) {
+
+       dfs(0,numbers,target,0);
+        return times;
+    }
+
+    static void dfs(int i, int[] numbers, int target,int currentNum){
+
+        if(i==numbers.length){
+            if(currentNum==target){
+                times++;
+            }
+        }
+
+        if(i<numbers.length){
+            for(int n=0; n<2;n++){
+            if(n==0){
+                dfs( i+1, numbers, target,currentNum+numbers[i]);
+
+            } else {
+                dfs( i+1, numbers, target,currentNum-numbers[i]);
+
+            }
+        }
+        }
+    }
+}

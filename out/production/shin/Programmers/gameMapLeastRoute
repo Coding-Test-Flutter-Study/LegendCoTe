@@ -1,0 +1,51 @@
+import java.util.Queue;
+import java.util.LinkedList;
+
+class Solution {
+
+    static boolean[][] visited;
+    static int[] dx = {-1,0,0,1};
+    static int[] dy = {0,1,-1,0};
+
+    public int solution(int[][] maps) {
+
+
+        visited = new boolean[maps.length][maps[0].length];
+
+        bfs(0,0,visited,maps);
+
+        if(maps[maps.length-1][maps[0].length-1]==1){
+            return -1;
+
+        } else {
+            return maps[maps.length-1][maps[0].length-1];
+        }
+
+    }
+
+    static void bfs(int x, int y, boolean[][] visited,int[][] maps){
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{x,y});
+        visited[x][y] = true;
+
+        while(!queue.isEmpty()){
+
+            int[] poll = queue.poll();
+
+            for(int i=0; i<4;i++){
+                int newX = poll[0]+dx[i];
+                int newY = poll[1]+dy[i];
+
+                if(newX>=0&&newY>=0&&newX<maps.length&&newY<maps[0].length
+                   &&!visited[newX][newY]&&maps[newX][newY]!=0){
+                    queue.offer(new int[]{newX,newY});
+                    visited[newX][newY]=true;
+                    maps[newX][newY] += maps[poll[0]][poll[1]];
+                }
+            }
+        }
+
+    }
+}
+
