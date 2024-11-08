@@ -1,0 +1,70 @@
+import java.util.*;
+
+class Solution {
+    
+    static int ans = Integer.MAX_VALUE;
+    
+    public int solution(int[] picks, String[] minerals) {
+        dfs(0,0,minerals,picks);
+        return ans;
+    }
+    
+    static void dfs(int nowMineral, int answer, String[] minerals,int[] picks){
+        
+        if(picks[0]==0&&picks[1]==0&&picks[2]==0){
+            ans = Math.min(ans,answer);
+            return;
+        }
+
+        if(nowMineral>=minerals.length){
+            ans = Math.min(ans,answer);
+            return;
+        }
+        
+        for(int i=0; i<3;i++){
+            //곡괭이 선택
+            if(picks[i]!=0){
+                picks[i]--;
+                int work = 0;
+                int n = nowMineral;
+                for(int j=nowMineral; j<nowMineral+5;j++){
+                    n=j;
+                    if(j>=minerals.length){
+                        break;
+                    }
+                    if(minerals[j].equals("diamond")){
+                        if(i==0){
+                            work+=1;
+                        } else if(i==1){
+                            work+=5;
+                        } else {
+                            work+=25;
+                        }
+                    } else if(minerals[j].equals("iron")){
+                        if(i==0){
+                            work+=1;
+                        } else if(i==1){
+                            work+=1;
+                        } else {
+                            work+=5;
+                        }
+                    } else {
+                        if(i==0){
+                            work+=1;
+                        } else if(i==1){
+                            work+=1;
+                        } else {
+                            work+=1;
+                        }
+                    }
+             
+                }
+                
+                dfs(n+1,answer+work,minerals,picks);
+                picks[i]++;
+            }
+            
+        }
+        
+}
+}
