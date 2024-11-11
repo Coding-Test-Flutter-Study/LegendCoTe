@@ -1,0 +1,65 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+import javax.management.StringValueExp;
+
+public class Main {
+
+	static BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	public static void main(String[] args) throws IOException {
+
+		String string = br.readLine();
+
+		boolean minus = false;
+
+		char nowCal = '+';
+		int ans = 0;
+		String nowString = "";
+		for (int i = 0; i < string.length(); i++) {
+
+			if (string.charAt(i) == '+' || string.charAt(i) == '-') {
+				if (minus==false) {
+					// - 나오기 전
+					if (nowCal == '+') {
+						ans += Integer.parseInt(nowString);
+					} else {
+						ans -= Integer.parseInt(nowString);
+						minus = true;
+					}
+
+				} else {
+					// - 나온 후
+					ans -= Integer.parseInt(nowString);
+				}
+				nowString = "";
+				nowCal = string.charAt(i);
+				if(nowCal=='-') {
+					minus = true;
+				}
+			} else {
+				nowString += string.charAt(i);
+			}
+
+		}
+
+		if (minus) {
+			ans -= Integer.parseInt(nowString);
+		} else {
+			ans += Integer.parseInt(nowString);
+		}
+
+		bw.write(String.valueOf(ans));
+		bw.flush();
+	}
+}
